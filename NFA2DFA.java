@@ -1,10 +1,21 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class NFA2DFA {
 
     private static final String INPUTS = "-- Input strings for testing -----------";
+
+    //TODO: Placeholder variable for integration later
+    private int initialState;
+    //TODO: Placeholder variable for list of states
+    String[] acceptingStates;
+
+    //TODO: Placeholder map for storing states
+    Map<Set<Integer>, Map<String, Set<Integer>>> dfa = new HashMap<>();
     public static void main(String[] args) {
         // File input
         // No input file
@@ -63,18 +74,27 @@ public class NFA2DFA {
         //Get each individual input letter
         char[] letters = input.toCharArray();
         //TODO: Change to initial state
-        int currentState = 0;
-        for(int i=0;i<letters.length;i++){
-            //TODO: Add functionality to get next state from current input, don't know how that will look like yet
-            // Change current state to next one
+        int currentState = initialState;
+        //TODO: Placeholder location, holds the accepting states in int form
+        int[] acceptingStatesInt = new int [acceptingStates.length];
+        for(int i=0;i<acceptingStatesInt.length;i++){
+            acceptingStatesInt[i] = Integer.parseInt(acceptingStates[i]);
         }
-        //if(currentState==An accepting state){
-        // return true;
-        // }
-        //else{
-        // return false;
-        // }
-        return true;
+        for(int i=0;i<letters.length;i++){
+            Map next = dfa.get(currentState);
+            //TODO: Fix this line probably? Points to the wrong thing
+            currentState = (int) next.get(letters[i]);
+        }
+        // Checks last state against the list of accepting states
+        boolean accepted = false;
+        for(int i=0;i<acceptingStatesInt.length;i++){
+            if(acceptingStatesInt[i]==currentState){
+                accepted = true;
+                break;
+            }
+        }
+
+        return accepted;
     }
 
     /**
