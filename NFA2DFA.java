@@ -8,15 +8,16 @@ import java.util.Set;
 public class NFA2DFA {
 
     private static final String INPUTS = "-- Input strings for testing -----------";
+    private static final String SIGMA = "Sigma:";
+    //TODO: Hardcoded value, change
+    private int initialState = 0;
+    //TODO: Hardcoded value change
+    int[] acceptingStates = {0,2,3,5};
 
-    //TODO: Placeholder variable for integration later
-    private int initialState;
-    //TODO: Placeholder variable for list of states
-    String[] acceptingStates;
-
+    Map<Character, Integer> Alpha2Int = new HashMap<>();
     //TODO: Placeholder map for storing states
-    Map<Set<Integer>, Map<String, Set<Integer>>> dfa = new HashMap<>();
-    public static void main(String[] args) {
+    Map<Set<Integer>, Map<String, Integer>> dfa = new HashMap<>();
+    public static void main(String[] args) throws FileNotFoundException {
         // File input
         // No input file
         if(args.length==0){
@@ -24,8 +25,13 @@ public class NFA2DFA {
             System.exit(1);
         }
         NFA2DFA obj = new NFA2DFA();
-        File input = obj.fileInput(args[1]);
-
+        //TODO: Input file validation
+        //File input = obj.fileInput(args[0]);
+        //TEST DATA
+        File dfa = obj.fileInput("Data Files/X.dfa");
+        int states[][] = obj.dfaGetter(dfa);
+        boolean outputs[] = obj.stringParser(dfa, states);
+        obj.inputPrinter(outputs,dfa);
     }
 
     /**
@@ -43,11 +49,52 @@ public class NFA2DFA {
     }
 
     /**
+     * Test method to get 2d array of states from dfa file
+     * @param dfa DFA file
+     * @return Returns 2D array of states
+     * @throws FileNotFoundException
+     */
+    private int[][] dfaGetter(File dfa) throws FileNotFoundException {
+        Scanner scan = new Scanner(dfa);
+        //Get number of states
+        String line = scan.nextLine();
+        int numStates = 0;
+        char[] chars = line.toCharArray();
+        for(char c: chars){
+            if(Character.isDigit(c)){
+                numStates = Character.getNumericValue(c);
+                break;
+            }
+        }
+        line = scan.nextLine();
+        //Stores alphabet
+        String alpha[] = line.split("     ");
+        //Put corresponding chars as values in map
+        for(int i=1;i<alpha.length;i++){
+            Alpha2Int.put(alpha[i].charAt(0),i-1);
+        }
+        //Remove ---- line
+        scan.nextLine();
+        //Number of alphabets
+        int numAlpha = alpha.length-1;
+        int[][] states = new int[numStates][numAlpha];
+        for(int i=0;i<numStates;i++){
+            line = scan.nextLine();
+            String n[] = line.split("     ");
+
+            for(int j=1;j<=numAlpha;j++){
+                states[i][j-1] = Integer.parseInt(n[j]);
+            }
+        }
+        return states;
+    }
+
+    /**
      * Parses inputs in file
      * @param inputFile File
      * @return Returns boolean array of results to inputs
      */
-    private boolean[] stringParser(File inputFile) throws FileNotFoundException {
+    private boolean[] stringParser(File inputFile, int[][] states) throws FileNotFoundException {
         Scanner scan = new Scanner(inputFile);
         //TODO: Replace this if input strings ALWAYS start at same line number
         while(scan.hasNextLine()){
@@ -60,7 +107,7 @@ public class NFA2DFA {
         // Read all 30 inputs, tests each one, inputs it into output array
         for(int i=0;i<30;i++){
             String in = scan.nextLine();
-            outputs[i] = inputTester(in);
+            outputs[i] = inputTester(in, states);
         }
         return outputs;
     }
@@ -70,25 +117,21 @@ public class NFA2DFA {
      * @param input Input string
      * @return Returns T/F if passed or not
      */
-    private boolean inputTester(String input){
+    private boolean inputTester(String input, int[][] states){
         //Get each individual input letter
         char[] letters = input.toCharArray();
-        //TODO: Change to initial state
         int currentState = initialState;
         //TODO: Placeholder location, holds the accepting states in int form
-        int[] acceptingStatesInt = new int [acceptingStates.length];
-        for(int i=0;i<acceptingStatesInt.length;i++){
-            acceptingStatesInt[i] = Integer.parseInt(acceptingStates[i]);
-        }
+
         for(int i=0;i<letters.length;i++){
-            Map next = dfa.get(currentState);
-            //TODO: Fix this line probably? Points to the wrong thing
-            currentState = (int) next.get(letters[i]);
+            int letterNo = Alpha2Int.get(letters[i]);
+            currentState = states[currentState][letterNo];
         }
+
         // Checks last state against the list of accepting states
         boolean accepted = false;
-        for(int i=0;i<acceptingStatesInt.length;i++){
-            if(acceptingStatesInt[i]==currentState){
+        for(int i=0;i<acceptingStates.length;i++){
+            if(acceptingStates[i]==currentState){
                 accepted = true;
                 break;
             }
@@ -120,8 +163,14 @@ public class NFA2DFA {
 
             //Formatting output according to assignment
             if(i!=29) {
-                System.out.print(result + " ");
+                if(i==14){
+                    System.out.print(result+"\n");
+                }
+                else {
+                    System.out.print(result + " ");
+                }
             }
+
             else{
                 System.out.print(result+"\n");
             }
