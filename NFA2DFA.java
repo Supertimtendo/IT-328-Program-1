@@ -177,4 +177,140 @@ public class NFA2DFA {
         }
         System.out.print("Yes: "+numYes+" No: "+numNo);
     }
+   
+    // minimizeDFA(dfa, initialState, acceptingStates, sigma, args[1])
+    private Map<Set<Integer>, Map<String, Set<Integer>>> minimizeDFA(Map<Set<Integer>, Map<String, Set<Integer>>> origDFA, int initialState, String[] acceptingStates, String[] sigma, String args){
+        //Initialize stuff for minimization
+        int numStates = origDFA.size();        
+        Map<Set<Integer>, Map<String, Set<Integer>>> minDFA = new HashMap<>();
+        int[][] matrix = new int[numStates][numStates];
+        
+        //Determine initial distinguishable states
+        //Based on initial state, any accepting state is distinguishable
+        for (int i = 0; i < acceptingStates.length; i++){
+            int acceptingState = Integer.parseInt(acceptingStates[i]);
+            if (initialState == acceptingState){
+                for (int j = 0; j < numStates; j++){ //Set all non accepting states to 1
+                    if (j != acceptingState){ //If j is not an accepting state, it must be distinguishable from the initial state
+                        matrix[0][j] = 1;
+                        matrix[j][0] = 1;
+                    }
+                }
+            }
+            else{ //Initial state is not an accepting state
+                for (int j = 0; j < acceptingStates.length; j++){ //Set all accepting states to 1 because they're distinguishable
+                    int accepting = Integer.parseInt(acceptingStates[j]);
+                    matrix[0][accepting] = 1;
+                    matrix[accepting][0] = 1;
+                }
+            }
+        }
+        
+        //loop through indices to determine rest of matrix
+        boolean changed = true;
+        while (changed){
+            changed = false;
+            for (int i = 0;  i < numStates; i++){
+                for (int j = 0; j < numStates; j++){
+                    //If matrix[i][j] == 1, check each column for i or j
+                    if (matrix[i][j] == 1){
+                        //Check each map's sigma at k (inputs)
+                        for (String symbol : sigma){
+                            int nextI = origDFA.get(origDFA.keySet().toArray()[i]).get(symbol).iterator().next();
+                            int nextJ = origDFA.get(origDFA.keySet().toArray()[j]).get(symbol).iterator().next();
+                            if (matrix[nextI][nextJ] == 0 || matrix[nextJ][nextI] == 0){
+                                matrix[i][j] = 0;
+                                matrix[j][i] = 0;
+                                changed = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Build the new map based on the matrix
+        for (int i = 0; i < numStates; i++) {
+            for (int j = i + 1; j < numStates; j++) {
+                if (matrix[i][j] == 0) {
+                    Set<Integer> stateI = (Set<Integer>) origDFA.keySet().toArray()[i];
+                    Set<Integer> stateJ = (Set<Integer>) origDFA.keySet().toArray()[j];
+                    Map<String, Set<Integer>> transitions = new HashMap<>();
+
+                    for (String symbol : sigma) {
+                        int nextStateI = origDFA.get(stateI).get(symbol).iterator().next();
+                        int nextStateJ = origDFA.get(stateJ).get(symbol).iterator().next();
+
+                        // Find the index of nextStateI in the original DFA
+                        int nextStateIndexI = -1;
+                        int nextStateIndexJ = -1;
+
+                        for (int k = 0; k < numStates; k++) {
+                            Set<Integer> currentState = (Set<Integer>) origDFA.keySet().toArray()[k];
+                            if (currentState.equals(nextStateI)) {
+                                nextStateIndexI = k;
+                            } else if (currentState.equals(nextStateJ)) {
+                                nextStateIndexJ = k;
+                            }
+                        }
+
+                        Set<Integer> nextStateSetI = (Set<Integer>) origDFA.keySet().toArray()[nextStateIndexI];
+                        Set<Integer> nextStateSetJ = (Set<Integer>) origDFA.keySet().toArray()[nextStateIndexJ];
+
+                        if (matrix[nextStateIndexI][nextStateIndexJ] == 0) {
+                            transitions.put(symbol, nextStateSetI);
+                        } else {
+                            transitions.put(symbol, nextStateSetJ);
+                        }
+                    }
+                    minDFA.put(stateI, transitions);
+                }
+            }
+        }
+
+        //Print output
+        System.out.println("Minimized DFA from " + args + ":");
+        System.out.print(" Sigma: ");
+        for (int i = 0; i < sigma.length; i++){
+            System.out.print(sigma[i] + " ");
+        }
+        System.out.println("");
+        System.out.println(" ------------------------------");
+        
+        //Print minimized DFA
+        for (Set<Integer> state : minDFA.keySet()) {
+            int currentStateIndex = 0;
+            for (int i = 0; i < minDFA.keySet().size(); i++) {
+                if (minDFA.keySet().toArray()[i].equals(state)) {
+                    currentStateIndex = i;
+                    break;
+                }
+            }
+
+            System.out.print(currentStateIndex + ": ");
+            for (String s : sigma) {
+                Set<Integer> nextStateSet = minDFA.get(state).get(s);
+                int nextStateIndex = 0;
+                for (int i = 0; i < minDFA.keySet().size(); i++) {
+                    if (minDFA.keySet().toArray()[i].equals(nextStateSet)) {
+                        nextStateIndex = i;
+                        break;
+                    }
+                }
+                System.out.print(nextStateIndex + " ");
+            }
+            System.out.println();
+        }
+
+        System.out.println(" ------------------------------");
+        System.out.println(initialState + ":  Initial State");
+        for (int i = 0; i < acceptingStates.length - 1; i++){
+            System.out.print(acceptingStates[i] + ", ");
+        }
+        System.out.println(": Accepting State(s)");
+        System.out.println(":  Initial State");
+
+        return minDFA;
+    }
 }
