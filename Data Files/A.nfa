@@ -1,0 +1,44 @@
+|Q|: 6
+Sigma: a b c d 
+----------------------------------------
+0: {} {} {3,4} {} {0} 
+1: {3} {} {} {} {1} 
+2: {} {0} {} {} {2} 
+3: {5} {} {} {2} {2,3} 
+4: {4} {} {4} {} {4} 
+5: {} {} {} {} {2,5} 
+----------------------------------------
+initial State: 0
+Accepting State(s): 5
+
+-- Input strings for testing -----------
+
+cdbcdbcdbcabcdbcdbcdbcdbcabcbcdbcabcdbcdbcdbcbcbcdbcbcabcbcbcdbcabcabcdbcabca
+cabcbcbcbcabcdbcdbcdbcdbcdbcbcdbcabcdbcdbcbcdbcbcabcbcdbcdbcdbcbcbcabcdbcdbcdbcdbcbcdbcbcdbcdbcdbcdbcabcbcabcbcdbcbcdbcbca
+cbcdbcdbcabcbcabcabcdbcbcabcabcbcdbcbcbcdbcdbcb
+cabcdbcabcabcbcdbcdbcdbcabcabcabcdbca
+cdbcdbcdbcdbcdbcbcabcabcdbcdbcabcbcbcbcbcabcabcabcbcbcabcabcbcabcabcbcbcdbcabcbcbcbcdbcabcabcdbcdbcbcdbcbcdbcbcdbcdbcbcdbcabcbcdbcabcabcdbcdbcd
+cbcdbcdbcabcbcdbcdbcdbcbcdbcdbcabcabcbcbcbcdbcdbcdbcabc
+cabcdbcbcabcabcaab
+cbcabcabcabcabcabcabcdbcabcbcdbc
+cdbcabcabcbcbcdbcbcabcabcbcabcabcbcdbcabcabcdbcbcb
+cabcdbcdbcdbcdbcdbcdbcdbcbcabcabcbcabcdbcabcabcbcabcabcabcabcabcabcbcdbcdbcdbcbcdbcabcbcdbcdbcdbcdbcdbcdbcabcdbcabcbcbcdbcdbcdbcd
+cabcabcbcbcbcbcabcbcdbcdbcabcdcaadb
+cdbcabcbcbcbcabcabcbcdbcabcdbcdbcbcdbcbcabcdbcacd
+cdbcdbcdbcdbcdbcdbcbcdbcbcabcabcabcbcabcabcabcbcbcdbcdbcabcabcabca
+cabcabcbcabcdbcbcabcabcbcabcbcbcdbcbcdbcabcabcabcdbcabcabcabcabcabcdbcdbcdbcdbcdbcdbcdbcdbcbcabcabcbcabcbcabcabcabcabcabca
+cabcabcabcabcabcabcabcabcabcbcbcabcabcbcabcdbcabcbcabcbcabcdbcdbcdbcdbcbcabcbcabcbcabcabcbcbcbcbcabcdbcbcabca
+cdbcabcdbcbcbcbcbcdbcdbcbcdbcbcdbcdbcbcdbcdbcbcdbcdbcabcabcabcbcdbcdbcdbcdbcdbcbcdbcdbcabcabcabcbcdbcdbcbcbcdbc
+cdbcdbcdbcbcabcabcbcabcdbcdbcdbcdbcabcdbcabcdbcabcbcbcbcdbcdbcdbcbcbcbcabcabcabcbcbcabcbcdbcdbcdbcabcabcabcabcabcabcabcdbcdbcbca
+cbcabcabcdbcdbcabcdbcbca
+cabcabcbcabcabcabcdbcdbcbcabcabcaad
+cbcabcdbcabcabcabcabcabcabcabcabcbcbcbcbcbcbcbcabcbc
+cabcbcbcdbcbcabcdbcdbcbcbcdbcdbcdbcdbcdbcbcbcdbcbcabcdbcbcdbcabcdbcdbcabcbcabcabcabcbcbcabcdbcabcbcbcdbcbcabcbcdbca
+cdbcbcabcabcabcdbcdbcbcabcabcabcabcabcabcabcabcabcbcabcbcabcdbcbcabcdbcdbcabcabcabcabcacbbabdbcd
+cbcdbcdbcdbcdbcdbcbcbcabcabcbcdbcbcabcacaacaaadc
+cbcbcdbcbcabcabcdbcdbcabcabcbcabcabcdbcbcbcabcdbcabcdbcbcdbcdbcdbcabcbcdbcabcbcbcdbcbcabcbcabcabcdbcdbcabcdbcabcbcabcdbcdbcabcdbcdbcbcdbcbcbcb
+cbcb
+cdbcabcabcd
+cbcbcbcbcdbcdbcbcdbcdbcbcdb
+cabcabcabcabcbcabcdbcdbcabcdbcabcdbcbcabcabcdbcabcabcbcabcbcbcdbcbcabcabcabcbcabcabcabcdbcdbcdbcbcabca
+cbcdbcdbcabcabcbcbcdbcabcdbcbcbcdbcdbcdbcdbcbcbcdbcdbcabcabcabcabcabcabcbcbcbcd

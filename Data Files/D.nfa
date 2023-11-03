@@ -1,0 +1,58 @@
+|Q|: 20
+Sigma: a b c d e 
+----------------------------------------
+0: {} {} {2} {} {2} {5,0} 
+1: {1,5} {} {} {} {} {1} 
+2: {} {} {} {} {} {1,2} 
+3: {3,8} {} {6} {} {} {3} 
+4: {} {} {} {6,7} {7} {6,7,4} 
+5: {6} {} {5} {4,8} {} {0,5} 
+6: {} {12} {1} {} {0} {6} 
+7: {} {} {2} {} {} {7} 
+8: {} {} {8} {} {} {8} 
+9: {9} {} {} {} {} {5,9} 
+10: {6} {14} {3,11} {} {10} {10} 
+11: {} {} {10,17} {} {} {7,13,11} 
+12: {10} {5} {6,8} {5} {} {12} 
+13: {} {6} {} {17} {6} {13} 
+14: {} {13} {18} {10,16} {} {15,14} 
+15: {} {8} {17,19} {13} {} {15} 
+16: {15} {12} {19} {} {12} {19,16} 
+17: {10} {} {18} {13,18} {} {17} 
+18: {} {} {} {} {} {18} 
+19: {13} {13} {12} {18} {} {19} 
+----------------------------------------
+initial State: 0
+Accepting State(s): 9,15,19
+
+-- Input strings for testing -----------
+
+ababcabbdabdbdaccbcaeababcabbdababcabbdabccacccbbabcabbdaeccbdebcabcacddd
+ababcabbdabccacceecddbbabcabdbbaababdccabdbbbeabaacacababcabbdabdbbbbaababcabdbcaababbbbaccaababcabbdabdbdaccbdecceeccabcabdbdabdcabcbdaecceebcabdbbb
+ababdbcaababbbcacadbabcabbcbabcdebabcabbdabdebdacaababdebabdbbbababcabdebdbb
+ababbbbaccabcabdbdabcacceebcabdd
+ababcabbdabbddbceabaacaababcaacaabaacaababcabbdabccaccaeecccddbcaaddbabcabbebabcabbabdccdababcabdcaebabcabdccbdb
+ababcaebdbddabcabdbabcabbdabccaccddbabdbcaababcabdebabdababcabdccbdcabbababcabdbccaccbdbddd
+ababbddecaaddbabcabdeababcabdac
+ababbbbaccabcabbabcaccabdebdbdacabdbdabdcabcaccebcabbabdccaababcabdcaebcabdbbababcabdbbaeccababdebdb
+ababbebabcabbdaababcabcaababcbebabcabcaababcabbdabdbdebdcabcaccabdbdccbdcacbbabccaccdbdaba
+ababcabbdabccabbbbaccabcabdbdabdcabcaeebdebcabccacababcabbdabdbdaccbdeccecababcabbdabccacababcabbdabdcabccacceecbbabdbabcabdcd
+ababbbbabcabbdabccacceecbbabcabbdabbddbedeababcabbdabccacceecceababdeabdbdeababdbdeb
+ababcabbdabbddbbcaeddeababdbdaeababcabdeabdbdaccbcbabcabbdabdbcabbdababdccbdbdaccbca
+ababcabbdabcbbeddeababbbbabbbbabbebabbbbabb
+ababccabcabbdabccacceecccebabcabbbababbbbaccabcabdbbaecceebcabdeababcabdbdddabcabdbbcababcabbdabdbbdaccbc
+ababdbdacaccc
+ababcabbbcddeababcaacaababbbbaccabcabdbccaebbddbedeeacababdccbabdcab
+ababdcabbacacbabcabbdabdbdaccbdacaeccaeeccbdbcabbdabcabbdabdababcabdbdababcabdbdcabdbdab
+ababcabdcabdcdabdbdaccc
+ababcabbdabdbdaccbcabcaddbbde
+ababcabbcbabcabbdabdbdaccbdcacceecacbabcabbdabdbdebc
+ababcabbbeddeababbbbaccabcabdbdabbdaeccebcabbdabccaccaeaeddeababcabdebdbdcabdaca
+ababcabbdabccaccaeecccacaeababbecacddeababcaebdacc
+ababcabbcbabcabbdababcabdacaeeccabbddbabcabbdababcabdbccaccabdbdebbddbbdeadcc
+ababcbebabcabbdabbebabcabbdabbddeddeababdca
+ababcabbdabdebcabcaec
+ababbebabbbbaccabbddbbaeebcabdcaeababbbbaccabcabdbccaccebcabdcaebdebbababcabbdabccacceecccbbabcabdeabdbdaccbaababcabdccbdab
+ababcabdbbdaeccababcabdababcaccabdebdbdacabdbbdaccab
+ababcabdcaebabcabdbcabbabcaccbdeaababdcaebdebdababcabbdabdebdacaababdcabbdabdacaebdcababbbbaccabcabdbcbdaeccebdccbabdcaababdcdabdc
+ababbdabcabbdabdbdaccbcabcaecccddecacaddbabdcaebdacc

@@ -1,0 +1,43 @@
+|Q|: 5
+Sigma: a b c d 
+----------------------------------------
+0: {1} {2} {} {} {0,1} 
+1: {1} {1,2,4} {1} {1} {1} 
+2: {2,4} {0} {1,3} {2} {2} 
+3: {0} {1,3} {3} {2,4} {3} 
+4: {3} {} {1} {3,4} {0,2,4} 
+----------------------------------------
+initial State: 3
+Accepting State(s): 3,4
+
+-- Input strings for testing -----------
+
+aabacadbdcacbacadbacaabacdcbbcadbcadbacabacabacdacabca
+bacabacacbcadbdcadbcabcadbacacbacadbdcadbacbca
+caabacaabcacbacadbacacbdcdcacbcabacaabacacbacabacacbd
+ccccccccccacbacddcacbcaa
+aabcbcabacabdcbccadbdcabacaabcabdcddcaabdcabdcaddbacaabacacbdcacbacaabcadbcadbacadbcacbcacbcadbacadbcaabcabacabdcddcab
+ccccccccccccbadbacabcacbcacbacadbcadbdcaabbdcabdcadbacacbacacbcdcadbcabdacabcabdcadabacaabdcadbacddcddcacbacabaacaabacadbcaabcabcbcadb
+adbacabacaabacadbacacbcabacaabacaabacadbacac
+ccadbcaabcaabacaabcadbacacadbcacbacacbcadbcaabcddcabcacbacaabacdacaabcadabcaabcdacac
+cccccccccccccccccccccccccc
+cbadabcdcaabacacbcacbdcdcadbcacbdcacbacadbacaabcadbcaabacdcaacbacacbacbcdacabdcdcadbcddcaabcabaca
+ccccdcacbdcacbdcabdcdcdcddcacbacaabacadbcaabcacbdcabacadbdcdacacbacabacaabcadbacabdcadbcacbdcacbacadbcabcabacbcabcabcabdcb
+aabddcdcaabacddcacbdccabcabcdcadbcaabcaccbcaa
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccadcbcadbacaabacacbbacabacadbddcdacbcabcaabacacbcadbacabdcddcda
+cccccccadbacacbcdacabacabacaabdacddcacbacadbacdacadbacadbdcaabcaabacabacabcaadbacaabacadabacadbdcaabaca
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccacbcacbacadbcadbcaabdcadbcabcadbacabdcacbdbcacbacabacacb
+cccbadbcacbacaabcaabdcadbcaabcabacaabacadbdcabdcacbcacbcabdcddcacbbdcdacadbacadbdcacbacadbdcaddbcacbcacbcaabacacb
+aabdcabacaabacaabcacbdcabacaabacaabacadbcacbdcdcaccbacacbdcaabcacbdcaabcadbcadbacabcbcaabacbcbcaabacacbacabacaabcaabdcaabacbcadbdcacd
+acbdcaabacaddbdcdacadbcaabacaabacabcadbcaabcaabcaabcacbcacbdcadbaacabcabcacbabdbcddcacbacabcabcaabcaabdcaabcaabcacbacacbacadbdca
+abaacaabcadcbbcaabacadbdcaabdcaabdcdacdcadbacdacacbdcdac
+ccccccaccbbcadbadcddcacbdcaccb
+cabcadbdcadbbacaddbdcaabdcaabacaabacadbaccabcdcadbcacbdcabdcacbacabdcdacacbdbcacbacacdbacadbcadabacacbcadbacad
+ccccbaabacadbacadbacacbacaabddcadabacaacbcaabacadbacaaabacaabcabacddcabacddcacbacaabacabacaabacacbacacbdcacbcaabacabdcbbcaabaca
+acbcadbacacbdcddcaabacadbacadbdcabcadbdcabacabdcaadbdcadbcaabcaabdcadbacbcadbcadcbcabcadbcaabacabdbcabacacbcabacadbcadbdcaabcadbacacbac
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cadadbcadbcaabacaabcabacaabacabdcababcacbcaabdcbcacbcabcacabacadbcac
+cbacbdcabacdacacbacdacadbacadbaca
+caabcacbacaacdbcacddbdcdac
