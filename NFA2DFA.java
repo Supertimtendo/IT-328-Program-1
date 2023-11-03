@@ -20,15 +20,8 @@ import java.util.stream.Collectors;
 public class NFA2DFA {
 
     private static final String INPUTS = "-- Input strings for testing -----------";
-    private static final String SIGMA = "Sigma:";
-    // TODO: Hardcoded value, change
-    private int initialState = 0;
-    // TODO: Hardcoded value change
-    int[] acceptingStates = { 0, 2, 3, 5 };
 
     Map<Character, Integer> Alpha2Int = new HashMap<>();
-    // TODO: Placeholder map for storing states
-    Map<Set<Integer>, Map<String, Integer>> dfa = new HashMap<>();
 
     public static void main(String[] args) throws FileNotFoundException {
         // File input
@@ -39,12 +32,22 @@ public class NFA2DFA {
         }
         NFA2DFA obj = new NFA2DFA();
         // TODO: Input file validation
-        // File input = obj.fileInput(args[0]);
+        // TODO: Fix hardcoded file
+        //File input = obj.fileInput(args[0]);
+        File input = obj.fileInput("Data Files/C.nfa");
         // TEST DATA
-        File dfa = obj.fileInput("Data Files/X.dfa");
-        int states[][] = obj.dfaGetter(dfa);
-        boolean outputs[] = obj.stringParser(dfa, states);
-        obj.inputPrinter(outputs, dfa);
+        //int states[][] = obj.dfaGetter(input);
+
+        NFA nfa = readNFAFromFile("Data Files/C.nfa");
+        //TODO: Uncomment this
+        //printNFA(nfa);
+
+        DFA dfa = convertNFAtoDFA(nfa);
+        dfa.printDFA();
+
+        //Part C
+        boolean outputs[] = obj.stringParser(input, dfa);
+        obj.inputPrinter(outputs, input);
     }
 
     /**
@@ -64,7 +67,7 @@ public class NFA2DFA {
 
     /**
      * Test method to get 2d array of states from dfa file
-     * 
+     * Only used if DFA cannot be produced from NFA
      * @param dfa DFA file
      * @return Returns 2D array of states
      * @throws FileNotFoundException
@@ -104,13 +107,14 @@ public class NFA2DFA {
         return states;
     }
 
+
+
     /**
      * Parses inputs in file
-     * 
      * @param inputFile File
      * @return Returns boolean array of results to inputs
      */
-    private boolean[] stringParser(File inputFile, int[][] states) throws FileNotFoundException {
+    private boolean[] stringParser(File inputFile, DFA dfa) throws FileNotFoundException {
         Scanner scan = new Scanner(inputFile);
         // TODO: Replace this if input strings ALWAYS start at same line number
         while (scan.hasNextLine()) {
@@ -123,7 +127,7 @@ public class NFA2DFA {
         // Read all 30 inputs, tests each one, inputs it into output array
         for (int i = 0; i < 30; i++) {
             String in = scan.nextLine();
-            outputs[i] = inputTester(in, states);
+            outputs[i] = inputTester(in, dfa);
         }
         return outputs;
     }
@@ -134,21 +138,24 @@ public class NFA2DFA {
      * @param input Input string
      * @return Returns T/F if passed or not
      */
-    private boolean inputTester(String input, int[][] states) {
+    private boolean inputTester(String input, DFA dfa) {
         // Get each individual input letter
         char[] letters = input.toCharArray();
-        int currentState = initialState;
+        int currentState = dfa.initialState;
         // TODO: Placeholder location, holds the accepting states in int form
 
         for (int i = 0; i < letters.length; i++) {
-            int letterNo = Alpha2Int.get(letters[i]);
-            currentState = states[currentState][letterNo];
+            //int letterNo = Alpha2Int.get(letters[i]);
+            int letterNo = dfa.alphabet.indexOf(String.valueOf(letters[i]));
+            List<Integer> test = dfa.transitionTable.get(currentState);
+            currentState = test.get(letterNo);
+            //currentState = states[currentState][letterNo];
         }
 
         // Checks last state against the list of accepting states
         boolean accepted = false;
-        for (int i = 0; i < acceptingStates.length; i++) {
-            if (acceptingStates[i] == currentState) {
+        for (int i = 0; i < dfa.acceptingStates.size(); i++) {
+            if (dfa.acceptingStates.get(i) == currentState) {
                 accepted = true;
                 break;
             }
