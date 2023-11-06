@@ -31,23 +31,24 @@ public class NFA2DFA {
             System.exit(1);
         }
         NFA2DFA obj = new NFA2DFA();
-        // TODO: Input file validation
-        // TODO: Fix hardcoded file
-        //File input = obj.fileInput(args[0]);
-        File input = obj.fileInput("Data Files/C.nfa");
-        // TEST DATA
-        //int states[][] = obj.dfaGetter(input);
-
-        NFA nfa = readNFAFromFile("Data Files/C.nfa");
-        //TODO: Uncomment this
+        File input = obj.fileInput(args[0]);
+        NFA nfa = readNFAFromFile(args[0]);
         //printNFA(nfa);
-
+        String fileNameRaw = input.getName().replaceFirst("[.][^.]+$", "");
+        System.out.println("NFA "+input.getName()+" to DFA "+fileNameRaw+".dfa:");
         DFA dfa = convertNFAtoDFA(nfa);
         dfa.printDFA();
-
-        //Part C
+        //Part C for 1st DFA
         boolean outputs[] = obj.stringParser(input, dfa);
         obj.inputPrinter(outputs, input);
+
+        //Part B
+
+
+        System.out.println("Minimized DFA from "+fileNameRaw+".dfa:");
+        //Part C for minimized DFA
+        //outputs = obj.stringParser(input, dfa);
+        //obj.inputPrinter(outputs, input);
     }
 
     /**
@@ -198,7 +199,7 @@ public class NFA2DFA {
                 System.out.print(result + "\n");
             }
         }
-        System.out.print("Yes: " + numYes + " No: " + numNo);
+        System.out.println("\nYes: " + numYes + " No: " + numNo+"\n");
     }
 
     // minimizeDFA(dfa, initialState, acceptingStates, sigma, args[1])
@@ -302,7 +303,7 @@ public class NFA2DFA {
             System.out.print(sigma[i] + " ");
         }
         System.out.println("");
-        System.out.println(" ------------------------------");
+        System.out.println("------------------------------");
 
         // Print minimized DFA
         for (Set<Integer> state : minDFA.keySet()) {
@@ -335,7 +336,6 @@ public class NFA2DFA {
             System.out.print(acceptingStates[i] + ", ");
         }
         System.out.println(": Accepting State(s)");
-        System.out.println(":  Initial State");
 
         return minDFA;
     }
@@ -368,8 +368,7 @@ public class NFA2DFA {
             }
 
             System.out.println("------------------------------");
-            System.out.println("Initial State: " + initialState);
-            System.out.print("Accepting State(s): ");
+            System.out.println(initialState+": Initial State");
 
             Iterator<Integer> iterator = acceptingStates.iterator();
             int i = 0;
@@ -381,7 +380,7 @@ public class NFA2DFA {
                 }
                 i++;
             }
-
+            System.out.print(": Accepting State(s)");
             System.out.println("\n");
         }
 
