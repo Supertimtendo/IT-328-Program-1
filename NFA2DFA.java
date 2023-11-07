@@ -47,6 +47,8 @@ public class NFA2DFA {
 
         System.out.println("Minimized DFA from "+fileNameRaw+".dfa:");
         //Part C for minimized DFA
+        minDFA mDFA = minimizeDFA(dfa);
+        mDFA.printMinDFA();
         //outputs = obj.stringParser(input, dfa);
         //obj.inputPrinter(outputs, input);
     }
@@ -202,142 +204,216 @@ public class NFA2DFA {
         System.out.println("\nYes: " + numYes + " No: " + numNo+"\n");
     }
 
-    // minimizeDFA(dfa, initialState, acceptingStates, sigma, args[1])
-    private Map<Set<Integer>, Map<String, Set<Integer>>> minimizeDFA(
-            Map<Set<Integer>, Map<String, Set<Integer>>> origDFA, int initialState, String[] acceptingStates,
-            String[] sigma, String args) {
-        // Initialize stuff for minimization
-        int numStates = origDFA.size();
-        Map<Set<Integer>, Map<String, Set<Integer>>> minDFA = new HashMap<>();
-        int[][] matrix = new int[numStates][numStates];
+    static class minDFA{
+        int numStates;
+        List<String> alphabet = new ArrayList<>();
+        List<List<Integer>> transitionTable = new ArrayList<>();
+        int initialState;
+        List<Integer> acceptingStates = new ArrayList<>();
+        int[][] matrix;
 
-        // Determine initial distinguishable states
-        // Based on initial state, any accepting state is distinguishable
-        for (int i = 0; i < acceptingStates.length; i++) {
-            int acceptingState = Integer.parseInt(acceptingStates[i]);
-            if (initialState == acceptingState) {
-                for (int j = 0; j < numStates; j++) { // Set all non accepting states to 1
-                    if (j != acceptingState) { // If j is not an accepting state, it must be distinguishable from the
-                                               // initial state
-                        matrix[0][j] = 1;
-                        matrix[j][0] = 1;
-                    }
+        //Print Minimized DFA
+        public void printMinDFA(){
+            System.out.println("|Q|: " + numStates);
+            System.out.print("Sigma: ");
+            for (String input : alphabet){
+                System.out.print("    " + input);
+            }
+            System.out.println("\n------------------------------");
+            for (int i = 0; i < numStates; ++i) {
+                System.out.print("    " + i + ":");
+                for (int transition : transitionTable.get(i)) {
+                    System.out.print("    " + transition);
                 }
-            } else { // Initial state is not an accepting state
-                for (int j = 0; j < acceptingStates.length; j++) { // Set all accepting states to 1 because they're
-                                                                   // distinguishable
-                    int accepting = Integer.parseInt(acceptingStates[j]);
-                    matrix[0][accepting] = 1;
-                    matrix[accepting][0] = 1;
+                System.out.println();
+            }
+
+            System.out.println("------------------------------");
+            System.out.println(initialState + ": Initial State");
+            Iterator<Integer> iterator = acceptingStates.iterator();
+            int i = 0;
+            while (iterator.hasNext()) {
+                System.out.print(iterator.next());
+                if (i < acceptingStates.size() - 1) {
+                    System.out.print(",");
+                }
+                i++;
+            }
+            System.out.print(": Accepting State(s)\n");
+        }
+    }
+
+    public static minDFA minimizeDFA (DFA dfa){
+        minDFA mDFA = new minDFA();
+        // Input all data from DFA
+        mDFA.initialState = dfa.initialState;
+        mDFA.alphabet = dfa.alphabet;
+
+        // Set up matrix
+        // 0 = indistinguishable
+        // 1 = distinguishable (default)
+        mDFA.matrix = new int[dfa.numStates][dfa.numStates];
+        for (int i = 0; i < dfa.numStates; i++){
+            for (int j = 0; j < dfa.numStates; j++){
+                mDFA.matrix[i][j] = 1;
+                if (i == j){
+                    mDFA.matrix[i][j] = 0;
                 }
             }
         }
 
-        // loop through indices to determine rest of matrix
-        boolean changed = true;
-        while (changed) {
-            changed = false;
-            for (int i = 0; i < numStates; i++) {
-                for (int j = 0; j < numStates; j++) {
-                    // If matrix[i][j] == 1, check each column for i or j
-                    if (matrix[i][j] == 1) {
-                        // Check each map's sigma at k (inputs)
-                        for (String symbol : sigma) {
-                            int nextI = origDFA.get(origDFA.keySet().toArray()[i]).get(symbol).iterator().next();
-                            int nextJ = origDFA.get(origDFA.keySet().toArray()[j]).get(symbol).iterator().next();
-                            if (matrix[nextI][nextJ] == 0 || matrix[nextJ][nextI] == 0) {
-                                matrix[i][j] = 0;
-                                matrix[j][i] = 0;
-                                changed = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Build the new map based on the matrix
-        for (int i = 0; i < numStates; i++) {
-            for (int j = i + 1; j < numStates; j++) {
-                if (matrix[i][j] == 0) {
-                    Set<Integer> stateI = (Set<Integer>) origDFA.keySet().toArray()[i];
-                    Set<Integer> stateJ = (Set<Integer>) origDFA.keySet().toArray()[j];
-                    Map<String, Set<Integer>> transitions = new HashMap<>();
-
-                    for (String symbol : sigma) {
-                        int nextStateI = origDFA.get(stateI).get(symbol).iterator().next();
-                        int nextStateJ = origDFA.get(stateJ).get(symbol).iterator().next();
-
-                        // Find the index of nextStateI in the original DFA
-                        int nextStateIndexI = -1;
-                        int nextStateIndexJ = -1;
-
-                        for (int k = 0; k < numStates; k++) {
-                            Set<Integer> currentState = (Set<Integer>) origDFA.keySet().toArray()[k];
-                            if (currentState.equals(nextStateI)) {
-                                nextStateIndexI = k;
-                            } else if (currentState.equals(nextStateJ)) {
-                                nextStateIndexJ = k;
-                            }
-                        }
-
-                        Set<Integer> nextStateSetI = (Set<Integer>) origDFA.keySet().toArray()[nextStateIndexI];
-                        Set<Integer> nextStateSetJ = (Set<Integer>) origDFA.keySet().toArray()[nextStateIndexJ];
-
-                        if (matrix[nextStateIndexI][nextStateIndexJ] == 0) {
-                            transitions.put(symbol, nextStateSetI);
-                        } else {
-                            transitions.put(symbol, nextStateSetJ);
-                        }
-                    }
-                    minDFA.put(stateI, transitions);
-                }
-            }
-        }
-
-        // Print output
-        System.out.println("Minimized DFA from " + args + ":");
-        System.out.print(" Sigma: ");
-        for (int i = 0; i < sigma.length; i++) {
-            System.out.print(sigma[i] + " ");
-        }
-        System.out.println("");
-        System.out.println("------------------------------");
-
-        // Print minimized DFA
-        for (Set<Integer> state : minDFA.keySet()) {
-            int currentStateIndex = 0;
-            for (int i = 0; i < minDFA.keySet().size(); i++) {
-                if (minDFA.keySet().toArray()[i].equals(state)) {
-                    currentStateIndex = i;
-                    break;
-                }
-            }
-
-            System.out.print(currentStateIndex + ": ");
-            for (String s : sigma) {
-                Set<Integer> nextStateSet = minDFA.get(state).get(s);
-                int nextStateIndex = 0;
-                for (int i = 0; i < minDFA.keySet().size(); i++) {
-                    if (minDFA.keySet().toArray()[i].equals(nextStateSet)) {
-                        nextStateIndex = i;
+        //If two states have the exact same transitions, they are indistinguishable.
+        for (int i = 0; i < dfa.numStates; i++) {
+            for (int j = 0; j < dfa.numStates; j++) {
+                boolean areSameTransitions = true;
+        
+                for (int alpha = 0; alpha < dfa.alphabet.size(); alpha++) {
+                    int transitionI = dfa.transitionTable.get(i).get(alpha);
+                    int transitionJ = dfa.transitionTable.get(j).get(alpha);
+        
+                    if (transitionI != transitionJ) {
+                        areSameTransitions = false;
                         break;
                     }
                 }
-                System.out.print(nextStateIndex + " ");
+        
+                if (i == j || areSameTransitions) {
+                    mDFA.matrix[i][j] = 0;  // States are the same or have the same transitions, mark them as indistinguishable
+                } else {
+                    mDFA.matrix[i][j] = 1;  // Default to distinguishable
+                }
             }
-            System.out.println();
         }
 
-        System.out.println(" ------------------------------");
-        System.out.println(initialState + ":  Initial State");
-        for (int i = 0; i < acceptingStates.length - 1; i++) {
-            System.out.print(acceptingStates[i] + ", ");
+        // Determine initial distinguishable states
+        // Based on initial state, any accepting state is distinguishable
+        for (int i = 0; i < dfa.acceptingStates.size(); i++) {
+            if (dfa.acceptingStates.contains(mDFA.initialState)) { //If initial state is also an accepting state
+                for (int j = 0; j < dfa.numStates; j++) { // Set all non accepting states to 1
+                    if (!dfa.acceptingStates.contains(j)) { // If j is not an accepting state, it must be distinguishable from the
+                                               // initial state
+                        mDFA.matrix[mDFA.initialState][j] = 0;
+                        mDFA.matrix[j][mDFA.initialState] = 0;
+                    }
+                }
+            } else { // Initial state is not an accepting state
+                for (int j = 0; j < dfa.acceptingStates.size(); j++) { // Set all accepting states to 1 because they're
+                                                                   // distinguishable
+                    for (int k = 0; k < dfa.acceptingStates.size(); k++){
+                        mDFA.matrix[mDFA.initialState][dfa.acceptingStates.get(k)] = 0;
+                        mDFA.matrix[dfa.acceptingStates.get(k)][mDFA.initialState] = 0;
+                    }
+                }
+            }
         }
-        System.out.println(": Accepting State(s)");
 
-        return minDFA;
+//ISSUE MOST LIKELY IN HERE
+        // Loop through indices to determine the rest of the matrix
+        // Stops when nothing has been changed
+        boolean changed = true;
+        while (changed) {
+            changed = false;
+            for (int i = 0; i < dfa.numStates; i++) {
+                for (int j = 0; j < dfa.numStates; j++) {
+                    if (mDFA.matrix[i][j] == 1) {
+                        // Find all possible nextI and nextJ states for this alpha symbol
+                        // Mark all pairs as indistinguishable if they haven't been marked already
+                        for (int alpha = 0; alpha < dfa.alphabet.size(); alpha++) {
+                            List<Integer> nextIList = new ArrayList<>();
+                            List<Integer> nextJList = new ArrayList<>();
+                            for (int k = 0; k < dfa.numStates; k++) {
+                                if (dfa.transitionTable.get(k).get(alpha).equals(i) && !nextIList.contains(k)) {
+                                    nextIList.add(k);
+                                }
+                                if (dfa.transitionTable.get(k).get(alpha).equals(j) && !nextJList.contains(k)) {
+                                    nextJList.add(k);
+                                }
+                            }
+                            
+                            // Mark all pairs of [nextI][nextJ] as distinguishable if they haven't been marked already
+                            for (int nextI : nextIList) {
+                                for (int nextJ : nextJList) {
+                                    if (mDFA.matrix[nextI][nextJ] == 1 && nextI != nextJ) {
+                                        mDFA.matrix[nextI][nextJ] = 0;
+                                        mDFA.matrix[nextJ][nextI] = 0;
+                                        changed = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+//The rest of this should work fine
+        // Create mDFA.transitionTable
+        mDFA.numStates = dfa.numStates;
+        List<Set<Integer>> distinguishableGroups = new ArrayList<>();
+        Set<Integer> processedStates = new HashSet<>(); // To keep track of processed states
+
+        for (int i = 0; i < mDFA.numStates; i++) {
+            // If this state is already processed, skip it
+            if (processedStates.contains(i)) {
+                continue;
+            }
+
+            Set<Integer> group = new HashSet<>();
+            group.add(i); // Add the current state to the group
+            for (int j = i + 1; j < mDFA.numStates; j++) {
+                if (mDFA.matrix[i][j] == 1) {
+                    group.add(j); // Add indistinguishable states to the group
+                    processedStates.add(j); // Mark them as processed
+                }
+            }
+            distinguishableGroups.add(group);
+        }
+        mDFA.numStates = distinguishableGroups.size();
+
+        Map<Integer, Integer> stateMap = new HashMap<>();
+        int newStateId = 0;
+        for (Set<Integer> group : distinguishableGroups) {
+            for (int state : group) {
+                stateMap.put(state, newStateId);
+            }
+            newStateId++;
+        }
+
+        // Determine transition table
+        List<List<Integer>> minimizedTransitionTable = new ArrayList<>();
+        for (Set<Integer> group : distinguishableGroups) {
+            List<Integer> transitionRow = new ArrayList<>();
+            int representativeState = group.iterator().next();
+            for (String input : mDFA.alphabet) {
+                int originalState = representativeState;
+                int originalStateTransition = dfa.transitionTable.get(originalState).get(mDFA.alphabet.indexOf(input));
+                int nextState = stateMap.get(originalStateTransition);
+                transitionRow.add(nextState);
+            }
+            minimizedTransitionTable.add(transitionRow);
+        }
+        mDFA.transitionTable = minimizedTransitionTable;
+
+        // Determine accepting states based on transition table
+        Set<Integer> acceptingStates = new HashSet<>();
+        for (Set<Integer> group : distinguishableGroups) {
+            boolean foundAcceptingState = false;
+            for (int originalAcceptingState : dfa.acceptingStates) {
+                for (int stateInGroup : group) {
+                    if (stateInGroup == originalAcceptingState) {
+                        foundAcceptingState = true;
+                        acceptingStates.add(stateMap.get(stateInGroup));
+                        break;
+                    }
+                }
+                if (foundAcceptingState) {
+                    break;
+                }
+            }
+        }
+        mDFA.acceptingStates = new ArrayList<>(acceptingStates);
+
+        return mDFA;
     }
 
     static class DFA {
