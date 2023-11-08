@@ -43,14 +43,16 @@ public class NFA2DFA {
         obj.inputPrinter(outputs, input);
 
         //Part B
-
+        minDFA min = minimizeDFA(dfa);
 
         System.out.println("Minimized DFA from "+fileNameRaw+".dfa:");
         //Part C for minimized DFA
         minDFA mDFA = minimizeDFA(dfa);
         mDFA.printMinDFA();
-        //outputs = obj.stringParser(input, dfa);
-        //obj.inputPrinter(outputs, input);
+        outputs = obj.stringParser(input, dfa);
+        obj.inputPrinter(outputs, input);
+
+        System.out.println("\n[Q] "+dfa.numStates+"-> "+min.numStates);
     }
 
     /**
@@ -119,7 +121,6 @@ public class NFA2DFA {
      */
     private boolean[] stringParser(File inputFile, DFA dfa) throws FileNotFoundException {
         Scanner scan = new Scanner(inputFile);
-        // TODO: Replace this if input strings ALWAYS start at same line number
         while (scan.hasNextLine()) {
             // If start of input is found
             if (scan.nextLine().equals(INPUTS)) {
@@ -137,7 +138,6 @@ public class NFA2DFA {
 
     /**
      * Tests a given string against the DFA
-     * 
      * @param input Input string
      * @return Returns T/F if passed or not
      */
@@ -145,7 +145,6 @@ public class NFA2DFA {
         // Get each individual input letter
         char[] letters = input.toCharArray();
         int currentState = dfa.initialState;
-        // TODO: Placeholder location, holds the accepting states in int form
 
         for (int i = 0; i < letters.length; i++) {
             //int letterNo = Alpha2Int.get(letters[i]);
@@ -174,7 +173,7 @@ public class NFA2DFA {
      * @param inputFile Input file to get name from
      */
     private void inputPrinter(boolean[] outputs, File inputFile) {
-        System.out.println("Parsing results of strings attached in " + inputFile.getName() + "\n");
+        System.out.println("Parsing results of strings attached in " + inputFile.getName() + ":");
         int numYes = 0;
         int numNo = 0;
         for (int i = 0; i < 30; i++) {
