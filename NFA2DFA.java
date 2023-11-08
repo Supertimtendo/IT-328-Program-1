@@ -52,7 +52,7 @@ public class NFA2DFA {
         outputs = obj.stringParser(input, dfa);
         obj.inputPrinter(outputs, input);
 
-        System.out.println("[Q] "+dfa.numStates+"-> "+min.numStates);
+        System.out.print("[Q] "+dfa.numStates+"-> "+min.numStates);
     }
 
     /**
@@ -248,7 +248,8 @@ public class NFA2DFA {
                 }
                 i++;
             }
-            System.out.print(": Accepting State(s)\n");
+            System.out.print(": Accepting State(s)");
+            System.out.println("\n");
         }
     }
 
