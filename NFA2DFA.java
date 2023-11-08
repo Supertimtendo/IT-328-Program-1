@@ -52,7 +52,7 @@ public class NFA2DFA {
         outputs = obj.stringParser(input, dfa);
         obj.inputPrinter(outputs, input);
 
-        System.out.println("\n[Q] "+dfa.numStates+"-> "+min.numStates);
+        System.out.println("[Q] "+dfa.numStates+"-> "+min.numStates);
     }
 
     /**
@@ -214,15 +214,25 @@ public class NFA2DFA {
         //Print Minimized DFA
         public void printMinDFA(){
             System.out.println("|Q|: " + numStates);
-            System.out.print("Sigma: ");
+            System.out.print("Sigma:");
             for (String input : alphabet){
-                System.out.print("    " + input);
+                System.out.print("     " + input);
             }
             System.out.println("\n------------------------------");
             for (int i = 0; i < numStates; ++i) {
-                System.out.print("    " + i + ":");
+                if(i>9){
+                    System.out.print("   " + i + ":");
+                }
+                else {
+                    System.out.print("    " + i + ":");
+                }
                 for (int transition : transitionTable.get(i)) {
-                    System.out.print("    " + transition);
+                    if(transition>9) {
+                        System.out.print("    " + transition);
+                    }
+                    else{
+                        System.out.print("     " + transition);
+                    }
                 }
                 System.out.println();
             }
@@ -421,19 +431,28 @@ mDFA.transitionTable = minimizedTransitionTable;
 
         public void printDFA() {
             System.out.println("|Q|: " + numStates);
-            System.out.print("Sigma: ");
+            System.out.print("Sigma:");
 
             for (String symbol : alphabet) {
-                System.out.print("    " + symbol);
+                System.out.print("     " + symbol);
             }
 
             System.out.println("\n------------------------------");
 
             for (int i = 0; i < numStates; ++i) {
-                System.out.print("    " + i + ":");
-
+                if(i>9){
+                    System.out.print("   " + i + ":");
+                }
+                else {
+                    System.out.print("    " + i + ":");
+                }
                 for (int transition : transitionTable.get(i)) {
-                    System.out.print("    " + transition);
+                    if(transition>9) {
+                        System.out.print("    " + transition);
+                    }
+                    else{
+                        System.out.print("     " + transition);
+                    }
                 }
 
                 System.out.println();
