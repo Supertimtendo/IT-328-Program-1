@@ -377,6 +377,7 @@ public class NFA2DFA {
         }
         mDFA.numStates = distinguishableGroups.size();
 
+        //Associating the correct groups with the correct states
         Map<Integer, Integer> stateMap = new HashMap<>();
         int newStateId = 0;
         for (Set<Integer> group : distinguishableGroups) {
@@ -386,19 +387,19 @@ public class NFA2DFA {
             newStateId++;
         }
 
-// Determine transition table
-List<List<Integer>> minimizedTransitionTable = new ArrayList<>();
-for (Set<Integer> group : distinguishableGroups) {
-    List<Integer> transitionRow = new ArrayList<>();
-    for (String input : mDFA.alphabet) {
-        int originalState = group.iterator().next(); // Use the representative state
-        int originalStateTransition = dfa.transitionTable.get(originalState).get(mDFA.alphabet.indexOf(input));
-        int nextState = stateMap.get(originalStateTransition);
-        transitionRow.add(nextState);
-    }
-    minimizedTransitionTable.add(transitionRow);
-}
-mDFA.transitionTable = minimizedTransitionTable;
+        // Determine transition table
+        List<List<Integer>> minimizedTransitionTable = new ArrayList<>();
+        for (Set<Integer> group : distinguishableGroups) {
+            List<Integer> transitionRow = new ArrayList<>();
+            for (String input : mDFA.alphabet) {
+                int originalState = group.iterator().next(); // Use the representative state
+                int originalStateTransition = dfa.transitionTable.get(originalState).get(mDFA.alphabet.indexOf(input));
+                int nextState = stateMap.get(originalStateTransition);
+                transitionRow.add(nextState);
+            }
+            minimizedTransitionTable.add(transitionRow);
+        }
+        mDFA.transitionTable = minimizedTransitionTable;
 
         // Determine accepting states based on transition table
         Set<Integer> acceptingStates = new HashSet<>();
